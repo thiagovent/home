@@ -1,5 +1,5 @@
-# venturelli.tec.br
+# home
 
-Repository from site venturelli.tec.br
+Repository of venturelli.tec.br
 
 Contains main page of people and subdomains indexes
