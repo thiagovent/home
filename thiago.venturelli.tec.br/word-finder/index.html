@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="word-finder.css">
+    
+    <title>Encontrar Palavras</title>
+    
+    <style>
+        
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1>Encontrar palavras<sup>1.0.0</sup></h1>
+        <small class="text-muted">
+            Auxílio para quando a memória não ajudar em jogos como <a href="https://term.ooo/" target="_blank">term.ooo</a> e <a href="https://g1.globo.com/jogos/dito/" target="_blank">Dito</a>.<br>
+        </small>
+        <p></p>
+        <div class="mode"></div>
+        <div class="mode row">
+
+            <div class="col-md-4 col-12">
+                <div>
+                    <h5>Encontrar por palavras</h5>
+                    <p class="fw-light">Se você está jogando, digite a palavra e clique nos quadrados para alterar a cor ou use 
+                        <span class="place" style="font-weight: bold; color: var(--letter-color);">&nbsp;?&nbsp;</span> 
+                        após letras no lugar errado e
+                        <span class="right" style="font-weight: bold;">&nbsp;!&nbsp;</span> 
+                        após letras no lugar correto. Por exemplo:</p>
+                        <div>
+                            <div class="letter wrong">c</div><div class="letter place">o</div><div class="letter wrong">i</div><div class="letter wrong">s</div><div class="letter right">a</div><div class="example">Digite: co?isa!</div>
+                        </div>
+                        
+                        <label for="inputWord1">Palavras</label>
+                        <select id="wordCountSelect" class="form-select wordsCount" onchange="Wordle.updateWordCount()">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6" selected>6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                        </select>
+                        &nbsp;
+                        <label for="colors">Cores</label>
+                        <select id="colors" class="form-select themeSelector" onchange="ThemeManager.updateColors()">
+                            <option value="wordle" selected>Wordle</option>
+                            <option value="term">Term.ooo</option>
+                            <option value="dito">Dito</option>
+                        </select>
+                    </div>
+                    
+                    <div id="wordInputs">
+                        
+                    </div>
+                    <div class="text-center">
+                        <button type="button" class="btn btn-primary" id="findWordsBtn" onclick="Wordle.search()">Encontrar</button>
+                    </div>
+                </div>
+                <div class="col-md-2 col-12" id="wordsOutput"></div>
+            </div>
+            
+
+            <div class="mode row">
+                <div class="col-md-4 col-12">
+                    <div class="form-label">
+                        <h5>Palavras que possuem</h5>
+                        <p class="fw-light">Deseja uma palavra com certas letras? Digite todas as letras na busca e busque para encontrar todas as palavras com elas</p>
+                        <div class="input-group">
+                            <input type="text" id="withLetters" class="form-control" placeholder="Digite as iniciais" aria-label="Digite as iniciais" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-primary" type="button" onclick="WithLetter.search()"><i class="bi bi-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-12" id="withLettersOutput"></div>
+            </div>
+
+
+            <div class="mode row">
+                <div class="col-md-4 col-12">
+                    <div class="form-label">
+                        <h5>Palavras que começam com...</h5>
+                        <p class="fw-light">Digite as letras iniciais e clique em buscar para encontrar todas as palavras iniciadas pela sequẽncia digitada</p>
+                        <div class="input-group">
+                            <input type="text" id="startsWith" class="form-control" placeholder="Digite as iniciais" aria-label="Digite as iniciais" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-primary" type="button" onclick="StartsWith.search()"><i class="bi bi-search"></i></button>
+                            </div>
+                        </div>
+                        <div id="startsWithFast" class="fast"></div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-12" id="startsWithOutput"></div>
+            </div>
+
+
+            <div class="mode row">
+                <div class="col-md-4 col-12">
+                    <div class="form-label">
+                        <h5>Palavras que terminam com...</h5>
+                        <p class="fw-light">Digite as letras finais e clique em buscar para encontrar todas as palavras terminadas com a sequẽncia digitada</p>
+                        <div class="input-group">
+                            <input type="text" id="endsIn" class="form-control" placeholder="Digite o final" aria-label="Digite o final" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-primary" type="button" onclick="EndsIn.search()"><i class="bi bi-search"></i></button>
+                            </div>
+                        </div>
+                        <div id="endsInFast" class="fast"></div>
+                    </div>
+                </div>
+                
+                <div class="col-md-2 col-12" id="endsInOutput"></div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-12 text-center">
+                    <small class="text-muted">
+                        Inspirado totalmente no <a href="https://www.thefreedictionary.com/Word-Finder.htm#Wordle" target="_blank">Word Finder</a> com a lista de palavras do <a href="https://term.ooo/" target="_blank">term.ooo</a>
+                        <br>🄯 Este conteúdo é copyleft: compartilhe, modifique e difunda. &nbsp; <a class="aicon" href="https://github.com/thiagovent/thiago.venturelli.tec.br" target="_blank"><i class="bi bi-github"></i></a>
+                    </small>
+                </div>
+                <p><br></p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="output.js"></script>
+    <script src="ends-in.js"></script>
+    <script src="starts-with.js"></script>
+    <script src="theme.js"></script>
+    <script src="with-letter.js"></script>
+    <script src="wordle.js"></script>
+    <script src="words.js"></script>
+    
+</body>
+</html>
